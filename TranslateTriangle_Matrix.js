@@ -15,9 +15,8 @@ var FSHADER_SOURCE =
   '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
-// The rotation angle
-var ANGLE = 90.0;
-
+// The translation distance for x, y, and z direction
+var Tx = 0.5, Ty = 0.5, Tz = 0.0;
 function main() {
   // Retrieve <canvas> element
   var canvas = document.getElementById('webgl');
@@ -49,20 +48,15 @@ function main() {
     console.log('Failed to get the storage location of u_FragColor');
     return;
   }
-
-  // Create a rotation matrix
-  var radian = Math.PI * ANGLE / 180.0; // Convert to radians
-  var cosB = Math.cos(radian), sinB = Math.sin(radian);
-
   // Note: WebGL is column major order
   var xformMatrix = new Float32Array([
-     cosB, sinB, 0.0, 0.0,
-    -sinB, cosB, 0.0, 0.0,
+      1.0,  0.0, 0.0, 0.0,
+	  0.0,  1.0, 0.0, 0.0,
       0.0,  0.0, 1.0, 0.0,
-      0.0,  0.0, 0.0, 1.0
+      Tx,  Ty, Tz, 1.0
   ]);
 
-  // Pass the rotation matrix to the vertex shader
+  // Pass the matrix to the vertex shader
   var u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix');
   if (!u_xformMatrix) {
     console.log('Failed to get the storage location of u_xformMatrix');
@@ -80,16 +74,11 @@ function main() {
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
   
-  ANGLE = 45;
-   // Create a rotation matrix
-  radian = Math.PI * ANGLE / 180.0; // Convert to radians
-  cosB = Math.cos(radian);
-  sinB = Math.sin(radian);
   xformMatrix = new Float32Array([
-     cosB, sinB, 0.0, 0.0,
-    -sinB, cosB, 0.0, 0.0,
+      1.0,  0.0, 0.0, 0.0,
+	  0.0,  1.0, 0.0, 0.0,
       0.0,  0.0, 1.0, 0.0,
-      0.0,  0.0, 0.0, 1.0
+      -Tx,  Ty, Tz, 1.0
   ]);
   gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);  
   gl.uniform4f(u_FragColor, 1.0, 1.0, 0.0, 1.0);
@@ -97,16 +86,11 @@ function main() {
   gl.drawArrays(gl.TRIANGLES, 0, n);
   
   
-  ANGLE = 30;
-   // Create a rotation matrix
-  radian = Math.PI * ANGLE / 180.0; // Convert to radians
-  cosB = Math.cos(radian);
-  sinB = Math.sin(radian);
   xformMatrix = new Float32Array([
-     cosB, sinB, 0.0, 0.0,
-    -sinB, cosB, 0.0, 0.0,
+      1.0,  0.0, 0.0, 0.0,
+	  0.0,  1.0, 0.0, 0.0,
       0.0,  0.0, 1.0, 0.0,
-      0.0,  0.0, 0.0, 1.0
+      Tx,  -Ty, Tz, 1.0
   ]);
   gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);  
   gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
@@ -114,16 +98,11 @@ function main() {
   gl.drawArrays(gl.TRIANGLES, 0, n);
   
   
-  ANGLE = 60;
-   // Create a rotation matrix
-  radian = Math.PI * ANGLE / 180.0; // Convert to radians
-  cosB = Math.cos(radian);
-  sinB = Math.sin(radian);
   xformMatrix = new Float32Array([
-     cosB, sinB, 0.0, 0.0,
-    -sinB, cosB, 0.0, 0.0,
+      1.0,  0.0, 0.0, 0.0,
+	  0.0,  1.0, 0.0, 0.0,
       0.0,  0.0, 1.0, 0.0,
-      0.0,  0.0, 0.0, 1.0
+      -Tx,  -Ty, Tz, 1.0
   ]);
   gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);  
   gl.uniform4f(u_FragColor, 0.0, 1.0, 1.0, 1.0);
