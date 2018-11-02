@@ -15,8 +15,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 // The rotation angle
@@ -45,6 +47,13 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
 
   // // Pass the data required to rotate the shape to the vertex shader
   var radian = Math.PI * ANGLE / 180.0; // Convert to radians
@@ -66,6 +75,40 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  
+    gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+
+  
+  ANGLE = 45;
+  radian = Math.PI * ANGLE / 180.0; // Convert to radians
+  cosB = Math.cos(radian);
+  sinB = Math.sin(radian);
+  gl.uniform1f(u_CosB, cosB);
+  gl.uniform1f(u_SinB, sinB);
+    gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+
+  
+    ANGLE = 0;
+  radian = Math.PI * ANGLE / 180.0; // Convert to radians
+  cosB = Math.cos(radian);
+  sinB = Math.sin(radian);
+  gl.uniform1f(u_CosB, cosB);
+  gl.uniform1f(u_SinB, sinB);
+    gl.uniform4f(u_FragColor, 1.0, 1.0, 0.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+
+    ANGLE = 30;
+  radian = Math.PI * ANGLE / 180.0; // Convert to radians
+  cosB = Math.cos(radian);
+  sinB = Math.sin(radian);
+  gl.uniform1f(u_CosB, cosB);
+  gl.uniform1f(u_SinB, sinB);
+    gl.uniform4f(u_FragColor, 0.0, 1.0, 1.0, 1.0);
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
 }
