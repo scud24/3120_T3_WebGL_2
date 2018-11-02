@@ -9,8 +9,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 // The translation distance for x, y, and z direction
@@ -46,6 +48,14 @@ function main() {
     console.log('Failed to get the storage location of u_Translation');
     return;
   }
+  
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
+  
   gl.uniform4f(u_Translation, Tx, Ty, Tz, 0.0);
 
   // Specify the color for clearing <canvas>
@@ -54,8 +64,27 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 0, 1.0);
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+    gl.uniform4f(u_FragColor, 1.0, 1.0, 0, 1.0);
+  gl.uniform4f(u_Translation, -Tx, Ty, Tz, 0.0);
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+    gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
+  gl.uniform4f(u_Translation, Tx, -Ty, Tz, 0.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+   gl.uniform4f(u_FragColor, 0.0, 1.0, 1.0, 1.0);
+  gl.uniform4f(u_Translation, -Tx, -Ty, Tz, 0.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
 }
 
 function initVertexBuffers(gl) {
