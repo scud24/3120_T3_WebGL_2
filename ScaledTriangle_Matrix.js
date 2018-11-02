@@ -9,8 +9,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 // The scaling factor
@@ -39,6 +41,12 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
 
   // Note: WebGL is column major order
   var xformMatrix = new Float32Array([
@@ -62,6 +70,47 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+   xformMatrix = new Float32Array([
+      0.25*Sx,   0.0,  0.0,  0.0,
+      0.0,  2*Sy,   0.0,  0.0,
+      0.0,  0.0,  0.5*Sz,   0.0,
+      0.0,  0.0,  0.0,  1.0
+  ]);
+  
+  
+  gl.uniform4f(u_FragColor, 1.0, 1.0, 0.0, 1.0);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  xformMatrix = new Float32Array([
+      3.5*Sx,   0.0,  0.0,  0.0,
+      0.0,  0.3*Sy,   0.0,  0.0,
+      0.0,  0.0,  0.5*Sz,   0.0,
+      0.0,  0.0,  0.0,  1.0
+  ]);
+  
+  
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+ 
+  xformMatrix = new Float32Array([
+      0.5*Sx,   0.0,  0.0,  0.0,
+      0.0,  0.5*Sy,   0.0,  0.0,
+      0.0,  0.0,  0.5*Sz,   0.0,
+      0.0,  0.0,  0.0,  1.0
+  ]);
+  
+  
+  gl.uniform4f(u_FragColor, 0.0, 1.0, 0.0, 1.0);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
 }
