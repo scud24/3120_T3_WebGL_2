@@ -9,8 +9,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 function main() {
@@ -36,6 +38,13 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
 
   // Create Matrix4 object for the rotation matrix
   var xformMatrix = new Matrix4();
@@ -58,8 +67,31 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  ANGLE = 30;
+  xformMatrix.setRotate(ANGLE, 0, 0, 1);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  ANGLE = 60;
+  xformMatrix.setRotate(ANGLE, 0, 0, 1);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
+  gl.uniform4f(u_FragColor, 0.0, 0.0, 1.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  ANGLE = 0;
+  xformMatrix.setRotate(ANGLE, 0, 0, 1);
+  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
+  gl.uniform4f(u_FragColor, 0.0, 1.0, 0.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
 }
 
 function initVertexBuffers(gl) {
