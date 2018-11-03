@@ -9,8 +9,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 function main() {
@@ -36,15 +38,23 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  
+  
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
 
   // Create Matrix4 object for model transformation
   var modelMatrix = new Matrix4();
 
   // Calculate a model matrix
-  var ANGLE = 60.0; // The rotation angle
-  var Tx = 0.5;     // Translation distance
+  var ANGLE = 0.0; // The rotation angle
+  var Tx = 0.5; 
   modelMatrix.setRotate(ANGLE, 0, 0, 1);  // Set rotation matrix
-  modelMatrix.translate(Tx, 0, 0);        // Multiply modelMatrix by the calculated translation matrix
+  modelMatrix.translate(0, -Tx, 0);        // Multiply modelMatrix by the calculated translation matrix
 
   // Pass the model matrix to the vertex shader
   var u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
@@ -60,6 +70,33 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  ANGLE = 90;
+  modelMatrix.setRotate(ANGLE, 0, 0, 1);  // Set rotation matrix
+  modelMatrix.translate(0, -Tx, 0);        // Multiply modelMatrix by the calculated translation matrix
+  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+  ANGLE = 180;
+  modelMatrix.setRotate(ANGLE, 0, 0, 1);  // Set rotation matrix
+  modelMatrix.translate(0, -Tx, 0);        // Multiply modelMatrix by the calculated translation matrix
+  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+  gl.uniform4f(u_FragColor, 0.0, 1.0, 1.0, 1.0);
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  
+  
+  ANGLE = 270;
+  modelMatrix.setRotate(ANGLE, 0, 0, 1);  // Set rotation matrix
+  modelMatrix.translate(0, -Tx, 0);        // Multiply modelMatrix by the calculated translation matrix
+  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+  gl.uniform4f(u_FragColor, 0.0, 0.0, 1.0, 1.0);
   // Draw the rectangle
   gl.drawArrays(gl.TRIANGLES, 0, n);
 }
