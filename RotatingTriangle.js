@@ -9,8 +9,10 @@ var VSHADER_SOURCE =
 
 // Fragment shader program
 var FSHADER_SOURCE =
+  'precision mediump float;\n' +
+  'uniform vec4 u_FragColor;\n' +  // uniform variable
   'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '  gl_FragColor = u_FragColor;\n' +
   '}\n';
 
 // Rotation angle (degrees/second)
@@ -39,7 +41,15 @@ function main() {
     console.log('Failed to set the positions of the vertices');
     return;
   }
+  
+  // Get the storage location of u_FragColor
+  var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  if (!u_FragColor) {
+    console.log('Failed to get the storage location of u_FragColor');
+    return;
+  }
 
+  gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -57,6 +67,32 @@ function main() {
 
   // Start drawing
   var tick = function() {
+	  if(currentAngle > 180 && currentAngle < 360)
+	  {
+		ANGLE_STEP = 90;
+		if(currentAngle < 270)
+		{		  
+			  gl.uniform4f(u_FragColor, 0.0, 1.0, 1.0, 1.0);
+		}
+		else
+		{
+			  gl.uniform4f(u_FragColor, 0.0, 0.0, 1.0, 1.0);		  
+		}
+	  }
+	  else
+	  {
+		  ANGLE_STEP = 45;
+		if(currentAngle < 90)
+		{		  
+			  gl.uniform4f(u_FragColor, 1.0, 0.0, 0.0, 1.0);
+		}
+		else
+		{
+			  gl.uniform4f(u_FragColor, 1.0, 1.0, 0.0, 1.0);		  
+		}
+	  }
+	  
+
     currentAngle = animate(currentAngle);  // Update the rotation angle
     draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix);   // Draw the triangle
     requestAnimationFrame(tick, canvas); // Request that the browser calls tick
